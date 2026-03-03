@@ -1,0 +1,44 @@
+{
+	"syncs": [
+		{
+			"id": "shared-config",
+			"source": "./sources/config.json",
+			"transformer": ["json-pick", "json-to-ts"],
+			"target": "./generated/config.ts",
+			"strategy": { "manual": true }
+		},
+		{
+			"id": "api-types",
+			"source": "./sources/api-schema.json",
+			"transformer": ["openapi-to-types", "add-banner"],
+			"target": "./generated/api-types.ts",
+			"strategy": { "manual": true }
+		},
+		{
+			"id": "env-vars",
+			"source": "./sources/env-template.env",
+			"transformer": "env-filter",
+			"target": "./generated/public.env",
+			"strategy": { "manual": true }
+		},
+		{
+			"id": "docs-extract",
+			"source": "./sources/full-docs.md",
+			"transformer": ["markdown-extract-section", "markdown-rewrite-links"],
+			"target": "./generated/api-guide.md",
+			"strategy": { "manual": true }
+		},
+		{
+			"id": "vendor-bundle",
+			"source": "./sources/vendor-utils.ts",
+			"transformer": [
+				"strip-comments",
+				"strip-exports",
+				"./transformers/add-project-header.ts",
+				"wrap"
+			],
+			"target": "./generated/vendor-bundle.ts",
+			"strategy": { "manual": true }
+		}
+	]
+}
