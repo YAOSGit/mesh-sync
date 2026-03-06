@@ -39,10 +39,10 @@ describe('hash-values transformer', () => {
 		expect(parsed.tags[1]).toBe(expectedHash('user'));
 	});
 
-	it('outputs JSON with 2-space indent and trailing newline', async () => {
+	it('outputs JSON with tab indent and trailing newline', async () => {
 		const input = JSON.stringify({ key: 'value' });
 		const result = await transform(input, ctx);
-		expect(result).toMatch(/^\{\n {2}"key": "[a-f0-9]{16}"\n\}\n$/);
+		expect(result).toMatch(/^\{\n\t"key": "[a-f0-9]{16}"\n\}\n$/);
 	});
 
 	it('produces consistent hashes for same input', async () => {

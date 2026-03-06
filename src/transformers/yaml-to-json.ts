@@ -194,6 +194,6 @@ function parseYaml(source: string): unknown {
 
 const transform: Transformer = (source) => {
 	const result = parseYaml(source);
-	return JSON.stringify(result, null, 2);
+	return JSON.stringify(result, null, '\t');
 };
 export default transform;

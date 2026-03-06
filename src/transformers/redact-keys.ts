@@ -39,6 +39,6 @@ const transform: Transformer = (source) => {
 	const keys = getRedactKeys();
 	const parsed = JSON.parse(source);
 	const redacted = redactObject(parsed, keys);
-	return `${JSON.stringify(redacted, null, 2)}\n`;
+	return `${JSON.stringify(redacted, null, '\t')}\n`;
 };
 export default transform;

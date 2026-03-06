@@ -1,11 +1,5 @@
+import type { ParameterObject } from '../types/openapi.js';
 import type { Transformer } from '../types/Transformer/index.js';
-
-type ParameterObject = {
-	name: string;
-	in: string;
-	required?: boolean;
-	schema?: { type?: string };
-};
 
 type OperationObject = {
 	operationId?: string;

@@ -537,6 +537,62 @@ This format allows you to quickly identify both the major version and the year o
 
 ---
 
+## Style Guide
+
+Conventions for contributing to this project. All rules are enforced by code review; Biome handles formatting and lint.
+
+### Exports
+
+- **Named exports only** for utilities and types. Transformers use `export default` (this is the one exception — it's the transformer contract).
+- **`import type`** — always use `import type` for type-only imports.
+- **`.js` extensions** — all relative imports use explicit `.js` extensions (ESM requirement).
+
+### File Structure
+
+```
+src/
+├── app/              # CLI entry point
+├── engine/           # Core sync engine (executor, pipeline, watcher)
+├── transformers/     # One file per transformer (kebab-case)
+├── types/            # Shared type definitions
+├── utils/            # Shared utility functions
+└── watcher/          # File watcher implementation
+```
+
+### Transformers
+
+Every transformer file follows the same contract:
+
+```typescript
+const transform = (source: string, context: TransformContext): string => {
+    // ... transformation logic
+};
+export default transform;
+```
+
+- Helper functions go **above** the `const transform` declaration.
+- JSON output uses tab indentation (`JSON.stringify(x, null, '\t')`), matching the Biome config.
+- Each transformer has a co-located `.test.ts` file.
+
+### Types
+
+- Use `type` keyword for all type definitions — never `interface`.
+- Shared types (used by multiple transformers) live in `src/types/`.
+- No duplicate type definitions — import from the canonical source.
+
+### Constants
+
+- Shared engine constants live in `src/engine/engine.consts.ts`.
+- No magic numbers — extract to named constants.
+- Environment variables use the `MESH_SYNC_` prefix.
+
+### Testing
+
+- Every module has a co-located test file: `moduleName.test.ts`.
+- Transformers: `transformerName.test.ts` next to the transformer file.
+
+---
+
 ## License
 
 ISC

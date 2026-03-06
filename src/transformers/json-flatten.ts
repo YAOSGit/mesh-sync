@@ -24,6 +24,6 @@ const transform: Transformer = (source) => {
 	const data = JSON.parse(source);
 	const result: Record<string, unknown> = {};
 	flatten(data, '', result);
-	return `${JSON.stringify(result, null, 2)}\n`;
+	return `${JSON.stringify(result, null, '\t')}\n`;
 };
 export default transform;

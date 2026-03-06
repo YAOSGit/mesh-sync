@@ -1,20 +1,5 @@
+import type { SchemaObject } from '../types/openapi.js';
 import type { Transformer } from '../types/Transformer/index.js';
-
-type SchemaObject = {
-	type?: string;
-	properties?: Record<string, SchemaObject>;
-	required?: string[];
-	items?: SchemaObject;
-	$ref?: string;
-	enum?: (string | number | boolean)[];
-	example?: unknown;
-	format?: string;
-	allOf?: SchemaObject[];
-	oneOf?: SchemaObject[];
-	anyOf?: SchemaObject[];
-	additionalProperties?: boolean | SchemaObject;
-	default?: unknown;
-};
 
 function resolveRef(
 	ref: string,

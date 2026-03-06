@@ -1,17 +1,5 @@
+import type { SchemaObject } from '../types/openapi.js';
 import type { Transformer } from '../types/Transformer/index.js';
-
-type SchemaObject = {
-	type?: string;
-	properties?: Record<string, SchemaObject>;
-	required?: string[];
-	items?: SchemaObject;
-	$ref?: string;
-	enum?: (string | number | boolean)[];
-	allOf?: SchemaObject[];
-	oneOf?: SchemaObject[];
-	anyOf?: SchemaObject[];
-	additionalProperties?: boolean | SchemaObject;
-};
 
 type MessageObject = {
 	payload?: SchemaObject;

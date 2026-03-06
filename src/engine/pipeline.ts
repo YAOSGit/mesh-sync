@@ -9,12 +9,11 @@ import type { SyncEntry } from '../types/Sync/index.js';
 import type { TransformContext } from '../types/Transformer/index.js';
 import { generateDiff } from '../utils/Diff/index.js';
 import { logVerbose } from '../utils/Logger/index.js';
+import { DEFAULT_TIMEOUT } from './engine.consts.js';
 import { executeBundledTransformer, executeTransformer } from './executor.js';
 import { fetchSource } from './fetcher.js';
 import { resolveSourceType } from './resolver.js';
 import { writeErrorMarker, writeTarget } from './writer.js';
-
-const DEFAULT_TIMEOUT = 30_000;
 
 export type SyncOptions = {
 	dryRun?: boolean;

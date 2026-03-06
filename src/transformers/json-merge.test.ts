@@ -49,10 +49,10 @@ describe('json-merge transformer', () => {
 		expect(JSON.parse(result as string)).toEqual({ tags: ['a', 'b', 'c'] });
 	});
 
-	it('outputs with 2-space indent and trailing newline', () => {
+	it('outputs with tab indent and trailing newline', () => {
 		process.env.MESH_SYNC_MERGE_BASE = JSON.stringify({ x: 1 });
 		const input = JSON.stringify({ y: 2 });
 		const result = transform(input, ctx);
-		expect(result).toBe('{\n  "x": 1,\n  "y": 2\n}\n');
+		expect(result).toBe('{\n\t"x": 1,\n\t"y": 2\n}\n');
 	});
 });

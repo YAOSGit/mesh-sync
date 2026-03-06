@@ -9,7 +9,6 @@ const TEST_BLOCK_RE =
 const transform: Transformer = (source) => {
 	const lines = source.split('\n');
 	const result: string[] = [];
-	let _skipDepth = 0;
 	let parenDepth = 0;
 	let braceDepth = 0;
 	let skipping = false;
@@ -32,7 +31,6 @@ const transform: Transformer = (source) => {
 			}
 			if (parenDepth <= 0 && braceDepth <= 0) {
 				skipping = false;
-				_skipDepth = 0;
 				parenDepth = 0;
 				braceDepth = 0;
 			}

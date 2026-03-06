@@ -1,8 +1,8 @@
 import type { Transformer } from '../types/Transformer/index.js';
 
-interface XmlNode {
+type XmlNode = {
 	[key: string]: unknown;
-}
+};
 
 function parseXml(source: string): XmlNode {
 	let pos = 0;
@@ -76,15 +76,14 @@ function parseXml(source: string): XmlNode {
 
 		pos++; // skip <
 
-		// Parse tag name
-		let _tagName = '';
+		// Skip tag name
 		while (
 			pos < src.length &&
 			src[pos] !== '>' &&
 			src[pos] !== ' ' &&
 			src[pos] !== '/'
 		) {
-			_tagName += src[pos++];
+			pos++;
 		}
 
 		skipWhitespace();
@@ -185,6 +184,6 @@ function parseXml(source: string): XmlNode {
 
 const transform: Transformer = (source) => {
 	const result = parseXml(source);
-	return JSON.stringify(result, null, 2);
+	return JSON.stringify(result, null, '\t');
 };
 export default transform;

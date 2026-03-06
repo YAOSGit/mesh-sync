@@ -30,6 +30,6 @@ const transform: Transformer = (source) => {
 	const base = JSON.parse(baseJson) as Record<string, unknown>;
 	const src = JSON.parse(source) as Record<string, unknown>;
 	const merged = deepMerge(base, src);
-	return `${JSON.stringify(merged, null, 2)}\n`;
+	return `${JSON.stringify(merged, null, '\t')}\n`;
 };
 export default transform;

@@ -58,9 +58,9 @@ describe('redact-keys transformer', () => {
 		expect(parsed.password).toBe('ok');
 	});
 
-	it('outputs JSON with 2-space indent and trailing newline', async () => {
+	it('outputs JSON with tab indent and trailing newline', async () => {
 		const input = JSON.stringify({ key: 'value' });
 		const result = await transform(input, ctx);
-		expect(result).toBe('{\n  "key": "value"\n}\n');
+		expect(result).toBe('{\n\t"key": "value"\n}\n');
 	});
 });

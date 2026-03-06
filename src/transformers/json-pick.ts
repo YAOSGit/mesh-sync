@@ -12,6 +12,6 @@ const transform: Transformer = (source) => {
 			picked[key] = data[key];
 		}
 	}
-	return `${JSON.stringify(picked, null, 2)}\n`;
+	return `${JSON.stringify(picked, null, '\t')}\n`;
 };
 export default transform;

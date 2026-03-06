@@ -64,6 +64,6 @@ function parseCsv(source: string): Record<string, string>[] {
 
 const transform: Transformer = (source) => {
 	const result = parseCsv(source);
-	return JSON.stringify(result, null, 2);
+	return JSON.stringify(result, null, '\t');
 };
 export default transform;

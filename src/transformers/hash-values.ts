@@ -25,6 +25,6 @@ function hashValues(obj: unknown): unknown {
 const transform: Transformer = (source) => {
 	const parsed = JSON.parse(source);
 	const hashed = hashValues(parsed);
-	return `${JSON.stringify(hashed, null, 2)}\n`;
+	return `${JSON.stringify(hashed, null, '\t')}\n`;
 };
 export default transform;

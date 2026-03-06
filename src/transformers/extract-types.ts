@@ -1,4 +1,5 @@
 import type { Transformer } from '../types/Transformer/index.js';
+import { countChar } from '../utils/countChar.js';
 
 const transform: Transformer = (source) => {
 	const lines = source.split('\n');
@@ -38,13 +39,5 @@ const transform: Transformer = (source) => {
 
 	return result.join('\n');
 };
-
-function countChar(str: string, ch: string): number {
-	let count = 0;
-	for (const c of str) {
-		if (c === ch) count++;
-	}
-	return count;
-}
 
 export default transform;

@@ -45,11 +45,11 @@ describe('json-omit transformer', () => {
 		});
 	});
 
-	it('outputs with 2-space indent and trailing newline', () => {
+	it('outputs with tab indent and trailing newline', () => {
 		process.env.MESH_SYNC_OMIT = 'b';
 		const input = JSON.stringify({ a: 1, b: 2 });
 		const result = transform(input, ctx);
-		expect(result).toBe('{\n  "a": 1\n}\n');
+		expect(result).toBe('{\n\t"a": 1\n}\n');
 	});
 
 	it('handles spaces in comma-separated keys', () => {

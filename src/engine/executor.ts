@@ -4,8 +4,7 @@ import path from 'node:path';
 import { Worker } from 'node:worker_threads';
 import * as esbuild from 'esbuild';
 import type { TransformContext } from '../types/Transformer/index.js';
-
-const DEFAULT_TIMEOUT = 30_000;
+import { DEFAULT_TIMEOUT } from './engine.consts.js';
 
 export async function executeTransformer(
 	transformerPath: string,

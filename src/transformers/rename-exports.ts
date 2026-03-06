@@ -1,5 +1,9 @@
 import type { Transformer } from '../types/Transformer/index.js';
 
+function escapeRegex(str: string): string {
+	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 const transform: Transformer = (source) => {
 	const envMap = process.env.MESH_SYNC_RENAME_MAP;
 	if (!envMap) return source;
@@ -39,9 +43,5 @@ const transform: Transformer = (source) => {
 
 	return result;
 };
-
-function escapeRegex(str: string): string {
-	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 
 export default transform;

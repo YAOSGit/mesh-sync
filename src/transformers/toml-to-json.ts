@@ -160,6 +160,6 @@ function parseToml(source: string): Record<string, unknown> {
 
 const transform: Transformer = (source) => {
 	const result = parseToml(source);
-	return JSON.stringify(result, null, 2);
+	return JSON.stringify(result, null, '\t');
 };
 export default transform;

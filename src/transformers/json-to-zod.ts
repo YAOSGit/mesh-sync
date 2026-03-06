@@ -1,13 +1,13 @@
 import type { Transformer } from '../types/Transformer/index.js';
 
-interface JsonSchema {
+type JsonSchema = {
 	type?: string;
 	properties?: Record<string, JsonSchema>;
 	required?: string[];
 	items?: JsonSchema;
 	enum?: (string | number | boolean)[];
 	description?: string;
-}
+};
 
 function schemaToZod(schema: JsonSchema, indent: number = 0): string {
 	const pad = '  '.repeat(indent);

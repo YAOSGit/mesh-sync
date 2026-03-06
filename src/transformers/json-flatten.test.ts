@@ -32,9 +32,9 @@ describe('json-flatten transformer', () => {
 		expect(JSON.parse(result as string)).toEqual({ 'a.b.0': 10, 'a.b.1': 20 });
 	});
 
-	it('outputs with 2-space indent and trailing newline', () => {
+	it('outputs with tab indent and trailing newline', () => {
 		const input = JSON.stringify({ x: 1 });
 		const result = transform(input, ctx);
-		expect(result).toBe('{\n  "x": 1\n}\n');
+		expect(result).toBe('{\n\t"x": 1\n}\n');
 	});
 });
