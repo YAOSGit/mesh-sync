@@ -1,4 +1,12 @@
-<h1 align="center">Yet another Open Source mesh-sync</h1>
+<p align="center">
+  <a href="https://github.com/YAOSGit/mesh-sync">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/YAOSGit/.github/main/profile/images/mesh-sync.svg">
+      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/YAOSGit/.github/main/profile/images/mesh-sync-light.svg">
+      <img src="https://raw.githubusercontent.com/YAOSGit/.github/main/profile/images/mesh-sync.svg" width="100%" alt="mesh-sync" />
+    </picture>
+  </a>
+</p>
 
 <p align="center">
   <strong>Cross-repo file sync with real-time transformations</strong>
