@@ -95,10 +95,10 @@ run().catch((err) => {
 		function cleanup() {
 			try {
 				fs.unlinkSync(workerPath);
+			} catch { /* file may already be gone */ }
+			try {
 				fs.rmdirSync(tmpDir);
-			} catch {
-				// Ignore cleanup errors
-			}
+			} catch { /* dir may not be empty or already gone */ }
 		}
 
 		worker.on('message', (msg: { type: string; data: string }) => {

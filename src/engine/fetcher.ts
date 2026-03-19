@@ -77,14 +77,18 @@ async function fetchRemote(
 
 const RETRY_DELAYS = [500, 1000, 2000];
 
+const FETCH_TIMEOUT_MS = 30_000;
+
 async function fetchWithRetry(
 	url: string,
 	options: RequestInit,
 	retries = 3,
 ): Promise<Response> {
 	for (let attempt = 0; attempt <= retries; attempt++) {
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 		try {
-			const response = await fetch(url, options);
+			const response = await fetch(url, { ...options, signal: controller.signal });
 
 			if (response.status >= 500 && attempt < retries) {
 				logVerbose(
@@ -102,6 +106,8 @@ async function fetchWithRetry(
 				continue;
 			}
 			throw err;
+		} finally {
+			clearTimeout(timeout);
 		}
 	}
 	// Unreachable, but satisfies TypeScript

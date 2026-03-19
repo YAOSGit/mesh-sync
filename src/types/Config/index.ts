@@ -1,5 +1,5 @@
 import type { SyncEntry } from '../Sync/index.js';
 
-export interface Config {
+export type Config = {
 	syncs: SyncEntry[];
-}
+};

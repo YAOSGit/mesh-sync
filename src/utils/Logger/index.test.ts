@@ -1,16 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { isVerbose, logVerbose, setVerbose } from './index.js';
+import { _resetLogger, isVerbose, logVerbose, setVerbose } from './index.js';
 
 describe('logger', () => {
 	let errorSpy: ReturnType<typeof vi.spyOn>;
 
 	beforeEach(() => {
 		errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+		// Re-create the logger so it captures the spied console.error
+		_resetLogger();
 		setVerbose(false);
 	});
 
 	afterEach(() => {
 		errorSpy.mockRestore();
+		// Restore the logger with the real console.error
+		_resetLogger();
 	});
 
 	it('does not log when verbose is off', () => {

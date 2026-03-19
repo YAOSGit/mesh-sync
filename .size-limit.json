@@ -1,5 +1,8 @@
 [
 	{
 		"path": "dist/cli.js"
+	},
+	{
+		"path": "dist/tui.js"
 	}
 ]

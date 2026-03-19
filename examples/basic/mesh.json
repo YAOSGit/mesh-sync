@@ -3,16 +3,26 @@
 		{
 			"id": "config-copy",
 			"source": "./source.json",
-			"transformer": "json-to-ts",
+			"transformer": [
+				"json-to-ts",
+				"./transformers/add-header.ts"
+			],
 			"target": "./generated/config.ts",
-			"strategy": { "manual": true }
+			"strategy": {
+				"manual": true
+			}
 		},
 		{
 			"id": "with-header",
 			"source": "./source.json",
-			"transformer": ["json-to-ts", "./transformers/add-header.ts"],
+			"transformer": [
+				"json-to-ts",
+				"./transformers/add-header.ts"
+			],
 			"target": "./generated/config-with-header.ts",
-			"strategy": { "manual": true }
+			"strategy": {
+				"manual": true
+			}
 		}
 	]
 }

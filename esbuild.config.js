@@ -1,9 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { builtinModules } from 'node:module';
 import * as esbuild from 'esbuild';
-
-const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'));
-const version = packageJson.version;
+import { createEsbuildConfig } from '@yaos-git/toolkit/build';
 
 const requireShim = `
 import { createRequire } from 'node:module';
@@ -44,41 +40,26 @@ const inlineBuiltinTransformers = {
 	},
 };
 
-const sharedConfig = {
-	bundle: true,
-	platform: 'node',
-	format: 'esm',
-	minify: true,
-	tsconfig: 'tsconfig.app.json',
-	external: [...builtinModules.map((m) => `node:${m}`), 'esbuild'],
-	banner: {
-		js: requireShim,
-	},
-	define: {
-		__CLI_VERSION__: JSON.stringify(version),
-	},
-	supported: {
-		'top-level-await': true,
-	},
-	plugins: [
-		inlineBuiltinTransformers,
-		{
-			name: 'node-builtins-to-node-prefix',
-			setup(build) {
-				const filter = new RegExp(`^(${builtinModules.join('|')})$`);
-				build.onResolve({ filter }, (args) => ({
-					path: `node:${args.path}`,
-					external: true,
-				}));
-			},
-		},
-	],
-	mainFields: ['module', 'main'],
-	conditions: ['import', 'node'],
-};
+const config = createEsbuildConfig({
+	entry: 'src/app/cli.ts',
+	banner: requireShim,
+	plugins: [inlineBuiltinTransformers],
+});
 
 await esbuild.build({
-	...sharedConfig,
-	entryPoints: ['src/app/cli.ts'],
+	...config,
 	outfile: 'dist/cli.js',
+	external: ['esbuild', ...config.external],
+});
+
+// Build TUI (Ink/React sync browser)
+const tuiConfig = createEsbuildConfig({
+	entry: 'src/app/tui.tsx',
+	plugins: [inlineBuiltinTransformers],
+});
+
+await esbuild.build({
+	...tuiConfig,
+	outfile: 'dist/tui.js',
+	external: ['esbuild', ...tuiConfig.external],
 });

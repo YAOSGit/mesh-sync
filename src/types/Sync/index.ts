@@ -1,22 +1,22 @@
-export interface WatchStrategy {
+export type WatchStrategy = {
 	watch: true;
-}
+};
 
-export interface PollStrategy {
+export type PollStrategy = {
 	poll: string;
-}
+};
 
-export interface ManualStrategy {
+export type ManualStrategy = {
 	manual: true;
-}
+};
 
 export type Strategy = WatchStrategy | PollStrategy | ManualStrategy;
 
-export interface SyncEntry {
+export type SyncEntry = {
 	id: string;
 	source: string;
 	transformer?: string | string[];
 	target: string;
 	strategy?: Strategy;
 	timeout?: number;
-}
+};

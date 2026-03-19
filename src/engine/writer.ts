@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { atomicWrite } from '@yaos-git/toolkit/cli';
 
 export function writeTarget(targetPath: string, content: string): void {
 	const dir = path.dirname(targetPath);
@@ -7,18 +8,7 @@ export function writeTarget(targetPath: string, content: string): void {
 		fs.mkdirSync(dir, { recursive: true });
 	}
 
-	const tempPath = `${targetPath}.${Date.now()}.tmp`;
-	try {
-		fs.writeFileSync(tempPath, content);
-		fs.renameSync(tempPath, targetPath);
-	} catch (error) {
-		try {
-			if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
-		} catch {
-			// Ignore cleanup errors
-		}
-		throw error;
-	}
+	atomicWrite(targetPath, content);
 }
 
 export function writeErrorMarker(

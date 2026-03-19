@@ -67,6 +67,7 @@
 - **Transformer chaining**: Pipe content through multiple transformers in sequence
 - **Error markers**: On failure, target files get a `// MESH-SYNC SYNC FAILED` header that breaks downstream builds loudly, preserving stale content below
 - **Atomic writes**: Uses temp file + rename to prevent partial writes
+- **Interactive TUI**: `mesh-sync-tui` provides a full terminal UI for browsing, editing, and syncing entries
 - **CI-friendly**: `mesh-sync sync` runs headless with JSON output for scripting
 
 ---
@@ -80,6 +81,8 @@ npm install -g @yaos-git/mesh-sync
 # Or install as a dev dependency
 npm install -D @yaos-git/mesh-sync
 ```
+
+This installs two binaries: `mesh-sync` (headless CLI) and `mesh-sync-tui` (interactive terminal UI).
 
 ### From Source
 
@@ -141,6 +144,8 @@ mesh-sync init             Scaffold mesh.json and transformers/ directory
 mesh-sync list             Show all sync entries with source, target, transformer, strategy
 mesh-sync --help           Show help message
 mesh-sync --version        Show version information
+
+mesh-sync-tui [-c, --config <path>]   Launch interactive TUI (defaults to ./mesh.json)
 ```
 
 ### Examples
@@ -285,7 +290,7 @@ Transformers run in isolated Worker threads — esbuild bundles the `.ts` file o
 
 ## Built-in Transformers
 
-Reference built-in transformers by their ID (no file path needed). mesh-sync ships 56 built-in transformers across 8 categories.
+Reference built-in transformers by their ID (no file path needed). mesh-sync ships 62 built-in transformers across 8 categories.
 
 ### Core
 
@@ -419,6 +424,57 @@ This first strips `@internal`/`@private` annotations, then prepends a header com
 
 ---
 
+## TUI Dashboard
+
+Launch with `mesh-sync-tui` (or `mesh-sync-tui -c path/to/mesh.json` for a custom config path).
+
+The TUI provides a **SplitPane layout**: an entry list in the top panel and a 3-column detail view in the bottom panel.
+
+### 3-Column Detail View
+
+```
+SOURCE file tree  -->  TRANSFORMERS chain  -->  TARGET file tree
+```
+
+- **Source**: file tree visualization of the source path
+- **Transformers**: ordered chain with add/remove/reorder controls
+- **Target**: file tree visualization of the target path
+
+### Browse Mode
+
+Navigate the entry list and perform bulk operations.
+
+| Key | Action |
+|-----|--------|
+| `Up` / `Down` | Navigate entries |
+| `s` | Sync selected entry |
+| `S` | Sync all entries |
+| `w` | Toggle watch mode |
+| `n` | Create new sync entry |
+| `d` | Delete selected entry |
+| `Enter` | Enter detail mode for selected entry |
+| `?` | Help menu |
+
+### Detail Mode
+
+Edit the selected sync entry's source, target, and transformer chain.
+
+| Key | Action |
+|-----|--------|
+| `Enter` | Edit source or target path |
+| `a` | Add transformer (picker with type-to-filter) |
+| `d` | Remove selected transformer |
+| `j` / `k` | Reorder transformer in chain |
+| `Esc` | Return to browse mode |
+
+### Pickers
+
+- **Source type picker**: choose between local / HTTP / git with prefilled prefixes
+- **Strategy picker**: manual / watch / poll (5s, 10s, 30s, 1m, 5m)
+- **Transformer picker**: browse all 62 built-in transformers plus auto-discovered local transformers from `transformers/` directories
+
+---
+
 ## Available Scripts
 
 ### Development Scripts
@@ -433,7 +489,7 @@ This first strips `@internal`/`@private` annotations, then prepends a header com
 
 | Script | Description |
 |--------|-------------|
-| `npm run build` | Bundle CLI with esbuild |
+| `npm run build` | Bundle CLI and TUI with esbuild (`dist/cli.js`, `dist/tui.js`) |
 
 ### Lint Scripts
 
@@ -467,6 +523,11 @@ This first strips `@internal`/`@private` annotations, then prepends a header com
 - **[chokidar](https://github.com/paulmillr/chokidar)** - File system watching
 - **[Chalk](https://github.com/chalk/chalk)** - Terminal string styling
 
+### TUI
+
+- **[React 19](https://react.dev/)** - UI component library
+- **[Ink 6](https://github.com/vadimdemedes/ink)** - React for CLIs
+
 ### Build & Development
 
 - **[esbuild](https://esbuild.github.io/)** - Fast ESM bundler
@@ -481,7 +542,8 @@ This first strips `@internal`/`@private` annotations, then prepends a header com
 mesh-sync/
 ├── src/
 │   ├── app/                       # Application entry points
-│   │   └── cli.ts                 # CLI entry point (Commander)
+│   │   ├── cli.ts                 # CLI entry point (Commander)
+│   │   └── tui.tsx                # TUI entry point (mesh-sync-tui)
 │   ├── engine/                    # Core sync pipeline
 │   │   ├── resolver.ts            # Source type classification (local/url/git)
 │   │   ├── fetcher.ts             # Content fetching (fs read, HTTP, git raw API)
@@ -507,6 +569,16 @@ mesh-sync/
 │   │   ├── Hash/                  # SHA256 content hashing
 │   │   ├── Logger/                # Verbose logging
 │   │   └── Time/                  # Interval string parsing (30s, 5m, 1h)
+│   ├── tui/                       # TUI application (mesh-sync-tui)
+│   │   ├── commands/              # Command system (browse + detail modes)
+│   │   ├── components/            # React (Ink) components
+│   │   │   └── SyncView/          # SplitPane: entry list + 3-column detail
+│   │   ├── hooks/                 # React hooks
+│   │   │   └── useUIState/        # UI state management
+│   │   └── providers/             # React context providers
+│   │       ├── ConfigProvider/    # Config loading and persistence
+│   │       ├── SyncProvider/      # Sync engine integration
+│   │       └── UIStateProvider/   # UI mode and selection state
 │   └── watcher/                   # Watch/poll strategies
 │       ├── local-watcher.ts       # Chokidar file system watcher
 │       └── remote-poller.ts       # Timed interval poller
@@ -559,9 +631,10 @@ Conventions for contributing to this project. All rules are enforced by code rev
 
 ```
 src/
-├── app/              # CLI entry point
+├── app/              # CLI and TUI entry points
 ├── engine/           # Core sync engine (executor, pipeline, watcher)
 ├── transformers/     # One file per transformer (kebab-case)
+├── tui/              # TUI application (commands, components, hooks, providers)
 ├── types/            # Shared type definitions
 ├── utils/            # Shared utility functions
 └── watcher/          # File watcher implementation
