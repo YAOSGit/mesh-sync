@@ -152,7 +152,7 @@ export default t;`,
 		} catch {
 			// CLI exits with code 1 on error — expected
 		}
-		const output = readTarget('out.ts');
+		const output = readTarget('.mesh-sync-errors/out.ts');
 		expect(output).toContain('MESH-SYNC SYNC FAILED');
 	});
 
