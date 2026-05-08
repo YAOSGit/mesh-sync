@@ -52,7 +52,8 @@ describe('writeErrorMarker', () => {
 			error: 'Transformer threw: Cannot read property',
 		});
 
-		const content = fs.readFileSync(target, 'utf-8');
+		const markerPath = path.join(TEST_DIR, '.mesh-sync-errors', 'out.ts');
+		const content = fs.readFileSync(markerPath, 'utf-8');
 		expect(content).toContain('MESH-SYNC SYNC FAILED');
 		expect(content).toContain('https://example.com/api.json');
 		expect(content).toContain('Cannot read property');
@@ -68,7 +69,8 @@ describe('writeErrorMarker', () => {
 			error: 'File not found',
 		});
 
-		const content = fs.readFileSync(target, 'utf-8');
+		const markerPath = path.join(TEST_DIR, '.mesh-sync-errors', 'new.ts');
+		const content = fs.readFileSync(markerPath, 'utf-8');
 		expect(content).toContain('MESH-SYNC SYNC FAILED');
 		expect(content).toContain('File not found');
 		expect(content).not.toContain('STALE OUTPUT');

@@ -11,6 +11,11 @@ export function createLocalWatcher(
 	const watcher = watch(sourcePath, {
 		ignoreInitial: true,
 		awaitWriteFinish: { stabilityThreshold: 200 },
+		ignored: [
+			'**/.mesh-sync-cache.json',
+			'**/mesh-sync-cache.json',
+			'**/.mesh-sync-errors/**',
+		],
 	});
 
 	watcher.on('change', onChange);

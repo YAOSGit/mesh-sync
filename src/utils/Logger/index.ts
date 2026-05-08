@@ -1,7 +1,7 @@
 import { createLogger } from '@yaos-git/toolkit/cli/logger';
 import { createCLITheme } from '@yaos-git/toolkit/theme';
 
-const theme = createCLITheme('#8514CA');
+const theme = createCLITheme('#FF0088');
 
 let verbose = false;
 let logger = createLogger({ prefix: 'mesh-sync', theme, stderr: true });

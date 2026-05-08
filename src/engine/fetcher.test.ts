@@ -180,12 +180,11 @@ describe('fetchSource', () => {
 		vi.spyOn(globalThis, 'fetch')
 			.mockRejectedValueOnce(new TypeError('fetch failed'))
 			.mockRejectedValueOnce(new TypeError('fetch failed'))
-			.mockRejectedValueOnce(new TypeError('fetch failed'))
 			.mockRejectedValueOnce(new TypeError('fetch failed'));
 
 		await expect(
 			fetchSource({ type: 'url', value: 'https://example.com/flaky' }),
-		).rejects.toThrow(/fetch failed/);
+		).rejects.toThrow(/Failed to fetch.*after 3 retries/);
 	});
 
 	it('does not add auth header when MESH_SYNC_GIT_TOKEN is unset', async () => {

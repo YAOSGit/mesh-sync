@@ -29,7 +29,10 @@ export function generateDiff(oldContent: string, newContent: string): string {
 			result.push(` ${oldLines[i - 1]}`);
 			i--;
 			j--;
-		} else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
+		// NOTE: The >= tie-break prefers additions (+) over deletions (-) when the
+	// LCS scores are equal. Standard unified diff convention is the reverse (- before +).
+	// This is a deliberate convention choice for this codebase.
+	} else if (j > 0 && (i === 0 || dp[i][j - 1] >= dp[i - 1][j])) {
 			result.push(`+${newLines[j - 1]}`);
 			j--;
 		} else {

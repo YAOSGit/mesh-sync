@@ -1,8 +1,13 @@
 import path from 'node:path';
 import type React from 'react';
-import { createContext, useCallback, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { runSync } from '../../../engine/pipeline.js';
+import { resolveSourceType } from '../../../engine/resolver.js';
 import type { SyncResult } from '../../../types/Status/index.js';
+import type { SyncEntry } from '../../../types/Sync/index.js';
+import { createLocalWatcher, createRemotePoller } from '../../../watcher/index.js';
+import type { WatcherHandle } from '../../../watcher/index.js';
+import type { PollerHandle } from '../../../watcher/index.js';
 import { useConfig } from '../ConfigProvider/index.js';
 import type { SyncContextValue, SyncProviderProps } from './SyncProvider.types.js';
 
@@ -55,6 +60,39 @@ export const SyncProvider: React.FC<SyncProviderProps> = ({ children }) => {
 		setIsWatching((prev) => !prev);
 	}, []);
 
+	const handlesRef = useRef<Array<WatcherHandle | PollerHandle>>([]);
+
+	useEffect(() => {
+		if (!isWatching || !config) return;
+
+		const handles: Array<WatcherHandle | PollerHandle> = [];
+
+		for (const entry of config.syncs) {
+			const resolved = resolveSourceType(entry.source);
+			const handleChange = () => { syncOne(entry.id); };
+
+			if (resolved.type === 'local') {
+				const sourcePath = path.resolve(cwd, resolved.value);
+				handles.push(createLocalWatcher(sourcePath, handleChange));
+			} else {
+				const intervalMs = entry.strategy && 'poll' in entry.strategy
+					? parsePollInterval(entry.strategy.poll)
+					: 30_000;
+				const remoteUrl = resolved.type === 'url' ? resolved.value : `${resolved.host}/${resolved.repo}`;
+				handles.push(createRemotePoller(remoteUrl, intervalMs, handleChange));
+			}
+		}
+
+		handlesRef.current = handles;
+
+		return () => {
+			for (const handle of handles) {
+				handle.stop();
+			}
+			handlesRef.current = [];
+		};
+	}, [isWatching, config, cwd, syncOne]);
+
 	return (
 		<SyncContext.Provider value={{ results, syncOne, syncAll, isWatching, toggleWatch }}>
 			{children}
@@ -67,3 +105,13 @@ export const useSyncContext = (): SyncContextValue => {
 	if (!ctx) throw new Error('useSyncContext must be used within SyncProvider');
 	return ctx;
 };
+
+function parsePollInterval(poll: string): number {
+	const match = poll.match(/^(\d+)(s|m|ms)?$/);
+	if (!match) return 30_000;
+	const value = Number(match[1]);
+	const unit = match[2] ?? 'ms';
+	if (unit === 's') return value * 1000;
+	if (unit === 'm') return value * 60_000;
+	return value;
+}

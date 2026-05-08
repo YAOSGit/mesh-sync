@@ -160,8 +160,9 @@ export default t;`,
 		expect(result.status).toBe('error');
 		expect(result.error).toContain('boom');
 
-		const content = fs.readFileSync(target, 'utf-8');
-		expect(content).toContain('MESH-SYNC SYNC FAILED');
-		expect(content).toContain('previous content');
+		const markerPath = path.join(TEST_DIR, '.mesh-sync-errors', 'target.ts');
+		const markerContent = fs.readFileSync(markerPath, 'utf-8');
+		expect(markerContent).toContain('MESH-SYNC SYNC FAILED');
+		expect(markerContent).toContain('previous content');
 	});
 });
