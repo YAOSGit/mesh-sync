@@ -1,6 +1,6 @@
 {
 	"name": "@yaos-git/mesh-sync",
-	"version": "126.1.0",
+	"version": "226.0.0",
 	"description": "Keep files in sync across repositories with real-time transformations",
 	"main": "dist/cli.js",
 	"bin": {

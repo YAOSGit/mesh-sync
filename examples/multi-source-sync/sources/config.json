@@ -1,0 +1,23 @@
+{
+	"name": "integration-example",
+	"version": "2.4.1",
+	"features": {
+		"darkMode": true,
+		"betaAccess": false,
+		"maxUploadSizeMB": 50,
+		"allowedFileTypes": ["png", "jpg", "pdf", "csv"]
+	},
+	"database": {
+		"host": "db.internal.example.com",
+		"port": 5432,
+		"name": "app_production",
+		"poolSize": 20,
+		"ssl": true
+	},
+	"api": {
+		"baseUrl": "https://api.example.com/v2",
+		"timeout": 30000,
+		"retries": 3,
+		"rateLimitPerMinute": 100
+	}
+}
